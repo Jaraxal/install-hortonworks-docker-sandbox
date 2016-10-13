@@ -648,6 +648,7 @@ That means the container is already stopped and can be deleted
 While the containers do not share configurations, they all run on the same Docker virtual machine.  This means that you should properly manage the number of containers you are using as the storage space of the VM will become an issue.
 
 Here is a quick screenshot of my disk usage in Ambari:
+
 ![HDFS Image 1](assets/hdfs-1.png)
 ![HDFS Image 2](assets/hdfs-2.png)
 
