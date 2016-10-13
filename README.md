@@ -121,7 +121,7 @@ mkdir -p ~/Docker/atlas-demo1 && cd ~/Docker/atlas-demo1
 
 To make it easy to switch between containers and projects, I like to create 4 helper scripts.  You can copy/paste the scripts as described below, or you can download them the attachments section of this article.
 
-## create-container.sh
+### create-container.sh
 
 The first script is used to create the container: create-container.sh.  In this script we'll be using a similar `docker run` command as used in the previous tutorial.  However, we are going to modify the mounts so they are no longer shared.  The key change is we are doing grab the basename of our current project directory and use that name as our mount pount.  We are using the basename of our project directory for the `--name` of the container.  In this case, the basename is `atlas-demo1`.  The last change you should notice is we have added a second -v flag.  This addition mounts our local project directory to `/mount` within the container.  This makes it really easy to copy data back and forth between our local directory and the container.
 
@@ -200,7 +200,7 @@ sandbox /usr/sbin/sshd -D
 
 Now save your file with `:wq!`
 
-## start-container.sh
+### start-container.sh
 
 The second script is used to start the container after it has been created.  You start a container by using the `docker start <container>` command where container is either the name or id.  Instead of having to remember what the container name is, we'll have the script figure that out for us.
 
@@ -218,7 +218,7 @@ docker start ${PROJ_DIR}
 
 Now save your file with `:wq!`
 
-## stop-container.sh
+### stop-container.sh
 
 The third script is used to stop the container after it has been created.  You stop a container by using the `docker stop <container>` command where container is either the name or id.  Instead of having to remember what the container name is, we'll have the script figure that out for us.
 
@@ -236,7 +236,7 @@ docker stop ${PROJ_DIR}
 
 Now save your file with `:wq!`
 
-## ssh-container.sh
+### ssh-container.sh
 
 The fourth script is used to ssh into the container.  The container maps the local host port 2222 to the container port 22 via the `-p 2222:22` line in the `create-container.sh` script.  Admittedly the ssh command to connect is simple.  However this script means I don't have to think about it very much.  Edit the ssh-container.sh file `vi ssh-container.sh`.
 
