@@ -119,7 +119,7 @@ mkdir -p ~/Docker/atlas-demo1 && cd ~/Docker/atlas-demo1
 
 ## Create the project helper files
 
-To make it easy to switch between containers and projects, I like to create helper scripts.  In the Docker sandbox scenario, I have 4 helper scripts.  You can copy/paste the scripts as described below, or you can download the helper-scripts.zip file.
+To make it easy to switch between containers and projects, I like to create helper scripts.  In the Docker sandbox scenario, I have 4 helper scripts.  You can copy/paste the scripts as described below, or you can download the helper-scripts.zip file.  All of these scripts should be run from within the project directory.
 
 ### create-container.sh
 
