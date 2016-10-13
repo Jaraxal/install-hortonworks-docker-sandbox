@@ -2,7 +2,7 @@
 
 Given the limited resources avaialble in a virtualized sandbox, you may choose to turn specific services on or off.  You may choose to enable or disable security, such as Kerberos.  Depending on your scenario, you may have a need to switch between these configurations frequently.  For reproduceable demos, you likely do not want to make these changes between one demo and the next.  If you are like me, you may want to have different copies of HDP sandboxes to cover different demo scenarios.
 
-With VirtualBox or VMWare sandboxes, you can easily import or clone a sandbox to have muliple, distinct copies.  EAch copy is unique with no sharing of configuration or data.  However, this approach is not quite as intuitive when using the Docker sandbox.  If you tried to create multiple containers on a Docker image thinking they would be separate copies, you likely have found they are not completely separate!
+With VirtualBox or VMWare sandboxes, you can easily import or clone a sandbox to have muliple, distinct copies.  Each copy is unique with no sharing of configuration or data.  However, this approach is not quite as intuitive when using the Docker sandbox.  If you tried to create multiple containers on a Docker image thinking they would be separate copies, you likely have found they are not completely separate!
 
 This tutorial will guide you through the process of using a single sandbox image, with multiple containers, without sharing the sandbox HDP configurations by mapping the container's /hadoop directory to distinct paths within the Docker VM.
 
@@ -111,7 +111,7 @@ As you can see, this where container is storing the data for the `/hadoop` mount
 
 ## Create a new project directory
 
-I like to create project directories.  My Vagrant work goes under `~/Vagrant/<project>` and my Docker work goes under `~/Docker/<project>`.  This allows me to cleary identify which technology is associated with the projects and allows me to use various helper scripts to automate processes, etc.  So let's create project directory for an notional Atlas demo.
+I like to create project directories.  My Vagrant work goes under `~/Vagrant/<project>` and my Docker work goes under `~/Docker/<project>`.  This allows me to cleary identify which technology is associated with the projects and allows me to use various helper scripts to automate processes, etc.  So let's create project directory for a notional Atlas demo.
 
 ```bash
 mkdir -p ~/Docker/atlas-demo1 && cd ~/Docker/atlas-demo1
@@ -119,11 +119,11 @@ mkdir -p ~/Docker/atlas-demo1 && cd ~/Docker/atlas-demo1
 
 ## Create the project helper files
 
-To make it easy to switch between containers and projects, I like to create 4 helper scripts.  You can copy/paste the scripts as described below, or you can download them the attachments section of this article.
+To make it easy to switch between containers and projects, I like to create helper scripts.  In the Docker sandbox scenario, I have 4 helper scripts.  You can copy/paste the scripts as described below, or you can download the helper-scripts.zip file.
 
 ### create-container.sh
 
-The first script is used to create the container: create-container.sh.  In this script we'll be using a similar `docker run` command as used in the previous tutorial.  However, we are going to modify the mounts so they are no longer shared.  The key change is we are doing grab the basename of our current project directory and use that name as our mount pount.  We are using the basename of our project directory for the `--name` of the container.  In this case, the basename is `atlas-demo1`.  The last change you should notice is we have added a second -v flag.  This addition mounts our local project directory to `/mount` within the container.  This makes it really easy to copy data back and forth between our local directory and the container.
+The first script is used to create the container.  In this script we'll be using a similar `docker run` command as used in the previous tutorial.  However, we are going to modify the mounts so they are no longer shared.  The key change is we are doing grab the basename of our current project directory and use that name as our mount pount.  We are using the basename of our project directory for the `--name` of the container.  In this case, the basename is `atlas-demo1`.  The last change you should notice is we have added a second -v flag.  This addition mounts our local project directory to `/mount` within the container.  This makes it really easy to copy data back and forth between our local directory and the container.
 
 Edit the create-container.sh file `vi create-container.sh`.
 
