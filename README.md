@@ -8,7 +8,7 @@ This tutorial will guide you through the process of using a single sandbox image
 
 # Prerequisites
 
-- You should have already completed this tutorial: [HCC Tutorial] (https://community.hortonworks.com/content/kbentry/58458/installing-docker-version-of-sandbox-on-mac.html)
+- You should have already completed this tutorial: [HCC Tutorial] (<https://community.hortonworks.com/content/kbentry/58458/installing-docker-version-of-sandbox-on-mac.html>)
 
 # Scope
 
@@ -25,10 +25,6 @@ This tutorial was tested using the following environment and components:
 The create container command, which was run in the previous tutorial, specifies a directory mount of `-v hadoop:/hadoop`.  This tells Docker to create the container with a mount of `/hadoop` that points to the VM host location `hadoop` which is a relative path.  We are trying to figure out where this location is.
 
 To see what storage mounts our Docker container has, we can use the `docker inspect` command.  If you followed my tutorial, we created the container and gave it the name `sandbox`.  In the output of this command you want to look for the `Mounts` section.
-
-```bash
-$ docker inspect sandbox
-```
 
 You should see something similar to this:
 
@@ -61,10 +57,6 @@ The directory doesn't exist.  Why is this?  The latest version of Docker for Mac
 
 So let's connect to the Docker VM to see if the directory exists there. The following command will start a temporary container based on an Alpine Linux image that mounts the Docker VMs root directory as `/vm-root` and then does an `ls -latr` on it.
 
-```bash
-$ docker run --rm -it -v /:/vm-root alpine:edge ls -latr /vm-root/var/lib/docker/volumes/
-```
-
 You should see something similar to this:
 
 ```bash
@@ -85,11 +77,7 @@ drwxr-xr-x    3 root     root          4096 Oct  5 13:50 a0575116e211d35d94ee648
 drwx------   14 root     root          4096 Oct  7 18:46 .
 ```
 
-There it is!  You should see the `hadoop` directory in your output.  Let's take a quick look inside of that directory by modifying our previouis Docker command:
-
-```bash
-$ docker run --rm -it -v /:/vm-root alpine:edge ls -latr /vm-root/var/lib/docker/volumes/hadoop/_data
-```
+There it is!  You should see the `hadoop` directory in your output.  Let's take a quick look inside of that directory by modifying our previouis Docker command.
 
 You should see something similar to this:
 
@@ -280,13 +268,7 @@ When you create a container with `docker run` it starts it for you.  That means 
 
 ## Connect to the atlas-demo1 container
 
-Now that the container is started, we can connect to it. We can use our new helper script `ssh-container.sh` to make it easy:
-
-```bash
-$ ./ssh-container.sh
-```
-
-You should be prompted for a password.  The default password on the sandbox is `hadoop`.  The first time you start log into a new container you will be prompted to change the password.  You should see something similar to this:
+Now that the container is started, we can connect to it. We can use our new helper script `ssh-container.sh` to make it easy.  You should be prompted for a password.  The default password on the sandbox is `hadoop`.  The first time you start log into a new container you will be prompted to change the password.  You should see something similar to this:
 
 ```bash
 $ ./ssh-container.sh
@@ -467,12 +449,13 @@ $ mkdir ~/Docker/atlas-demo2 && cd ~/Docker/atlas-demo2
 ```
 
 ## Copy helper scripts
+
 There is no reason to copy/paste those helper scripts again.  The scripts we created will work anywhere.  So let's copy them.
 
 ```bash
 $ cp ~/Docker/atlas-demo1/* .
 $ ls
-create-container.sh	ssh-container.sh	start-container.sh	stop-container.sh
+create-container.sh ssh-container.sh start-container.sh stop-container.sh
 ```
 
 ## Create the atlas-demo2 container
@@ -498,13 +481,29 @@ You should notice the shortened version of the container id is listed as `05e471
 
 ## Connect to the atlas-demo2 container
 
-Now that the container is started, we can connect to it. We can use our new helper script `ssh-container.sh` to make it easy:
+Now that the container is started, we can connect to it. We can use our new helper script `ssh-container.sh` to make it easy.  You should be prompted for a password.  The default password on the sandbox is `hadoop`.  The first time you log into a new container you will be prompted to change the password.  You should see something similar to this:
 
 ```bash
 $ ./ssh-container.sh
+root@localhost's password:
+You are required to change your password immediately (root enforced)
+Last login: Thu Sep 22 11:35:09 2016 from 172.17.0.1
+Changing password for root.
+(current) UNIX password:
+New password:
+Retype new password:
 ```
 
-Because this is a new container, you should be prompted for a password.  Change the password as you did with `atlas-demo1`.
+For demo purposes, I temporarily change it something new like `trymenow` and then change it back.
+
+```bash
+[root@sandbox ~]# passwd
+Changing password for user root.
+New password:
+BAD PASSWORD: is too simple
+Retype new password:
+passwd: all
+```
 
 ## Verify container mounts
 
