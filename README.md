@@ -408,7 +408,7 @@ You can click the green `OK` button.
 
 Once HBase is running, you should see something similar to this:
 
-ambari-2.png
+![Ambari Image 2](assets/ambari-2.png)
 
 Notce that HBase is running and is no longer in maintenance mode.
 
@@ -418,33 +418,33 @@ We are going to upload a file to the user home directory on HDFS.  As mentioned 
 
 Click on the Ambari Views menu in the upper right menu.  A drop down menu will be displayed.  You should see something similar to this:
 
-ambari-3.png
+![Ambari Image 3](assets/ambari-3.png)
 
 Click on the `Files View` option.  You should see something similar to this:
 
-files-1.png
+![Files Image 1](assets/files-1.png)
 
 We are going to navigate to our user home directory.  We are logged in as `raj_ops`.  So click on the `user` folder, then the `raj_ops` folder.  You should see something similar to this:
 
-files-2.png
+![Files Image 2](assets/files-2.png)
 
 Now we are going to upload a file.  Click on the blue `Upload` button.  You should see something similar to this:
 
-files-3.png
+![Files Image 3](assets/files-3.png)
 
 Click the cloud-arrow icon.  You should see a file dialog box that looks simlar to this:
 
-files-4.png
+![Files Image 4](assets/files-4.png)
 
 You should be in your project directory.  If you are not, nagivate it that location until you see the project helper files we create.  We are going to upload the start-container.sh script. Select the file and then click the `open` button.  You should see something similar to this:
 
-files-5.png
+![FilesHBase Image 5](assets/files-5.png)
 
 ## Stop the atlas-demo1 container
 
 Now we are going to stop our container.  Before stopping it, use Ambari to `Stop All` services.  You can find that link on the Ambari Dashboard:
 
-ambari-4.png
+![Ambari Image 4](assets/ambari-4.png)
 
 You stop your container by running the `stop-container.sh` script on the local host machine.
 
@@ -586,7 +586,7 @@ We are going to look at the services in Ambari.  In the old container we turned 
 
 You should see something similar to this:
 
-ambari-5.png
+![Ambari Image 5](assets/ambari-5.png)
 
 You should notice that the HBase service has maintenance mode turn on.
 
@@ -594,7 +594,7 @@ You should notice that the HBase service has maintenance mode turn on.
 
 Now nagivate the `raj_ops` HDFS home directory using the Ambari Files View.  Follow the process above up to get to the home directory.  You should see something similar to this:
 
-files-6.png
+![Files Image 6](assets/files-6.png)
 
 Notice the file we uploaded in the other container is not here.
 
@@ -648,8 +648,8 @@ That means the container is already stopped and can be deleted
 While the containers do not share configurations, they all run on the same Docker virtual machine.  This means that you should properly manage the number of containers you are using as the storage space of the VM will become an issue.
 
 Here is a quick screenshot of my disk usage in Ambari:
-hdfs-1.png
-hdfs-2.png
+![HDFS Image 1](assets/hdfs-1.png)
+![HDFS Image 2](assets/hdfs-2.png)
 
 Let's see what your disk usage looks like at the commandline:
 
@@ -678,8 +678,8 @@ none                     59.0G     33.1G     22.9G  59% /
 
 Here is what ambari looks like for a differnet container I have running:
 
-hdfs-3.png
-hdfs-4.png
+![HDFS Image 4](assets/hdfs-3.png)
+![HDFS Image 4](assets/hdfs-4.png)
 
 ## Review
 
