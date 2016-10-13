@@ -386,7 +386,7 @@ Starting shellinaboxd:                                     [  OK  ]
 
 Now the sandbox process are running and you can access the Ambari interface if `http://localhost:8080`.  Log in with the `raj_ops` username and password.  You should see something similar to this:
 
-!(assets/ambari-1.png?raw=true)
+![Ambari Image 1](assets/ambari-1.png)
 
 ## Enable HBase
 
@@ -394,15 +394,15 @@ We are going to start the HBase service and turn off maintenance mode.  We want 
 
 Click on the HBase service.  The HBase summary page will be displayed.  Click the Services button and select the `Start` menu option.  You should see something simiarl to this:
 
-hbase-1.png
+![HBase Image 1](assets/hbase-1.png)
 
 A confirmation dialog will be displayed.  Check the `Turn Off Maintenance Mode for HBase` and then click the green `Confirm Start` button.
 
-hbase-2.png
+![HBase Image 2](assets/hbase-2.png)
 
 The Background Operation Running dialog will be displayed.  You should see something similar to this:
 
-base-3.png
+![HBase Image 3](assets/hbase-3.png)
 
 You can click the green `OK` button.
 
