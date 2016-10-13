@@ -1,4 +1,6 @@
-# Objective
+# How to manage multiple copies of the Docker Version of the Hortonworks Sandbox
+
+## Objective
 
 Given the limited resources avaialble in a virtualized sandbox, you may choose to turn specific services on or off.  You may choose to enable or disable security, such as Kerberos.  Depending on your scenario, you may have a need to switch between these configurations frequently.  For reproduceable demos, you likely do not want to make these changes between one demo and the next.  If you are like me, you may want to have different copies of HDP sandboxes to cover different demo scenarios.
 
@@ -6,11 +8,11 @@ With VirtualBox or VMWare sandboxes, you can easily import or clone a sandbox to
 
 This tutorial will guide you through the process of using a single sandbox image, with multiple containers, without sharing the sandbox HDP configurations by mapping the container's /hadoop directory to distinct paths within the Docker VM.
 
-# Prerequisites
+## Prerequisites
 
 - You should have already completed this tutorial: [HCC Tutorial] (<https://community.hortonworks.com/content/kbentry/58458/installing-docker-version-of-sandbox-on-mac.html>)
 
-# Scope
+## Scope
 
 This tutorial was tested using the following environment and components:
 
@@ -18,9 +20,9 @@ This tutorial was tested using the following environment and components:
 - HDP 2.5 on Hortonworks Sandbox (Docker Version)
 - Docker for Mac 1.12.1
 
-# Steps
+## Steps
 
-## Identify where container storage is located
+### Identify where container storage is located
 
 The create container command, which was run in the previous tutorial, specifies a directory mount of `-v hadoop:/hadoop`.  This tells Docker to create the container with a mount of `/hadoop` that points to the VM host location `hadoop` which is a relative path.  We are trying to figure out where this location is.
 
@@ -97,7 +99,7 @@ drwxr-xr-x    7 510      501           4096 Oct  5 21:37 storm
 
 As you can see, this where container is storing the data for the `/hadoop` mount.  The problem with this is that mount is the same for every container that runs that image using the run command we provided before.
 
-## Create a new project directory
+### Create a new project directory
 
 I like to create project directories.  My Vagrant work goes under `~/Vagrant/<project>` and my Docker work goes under `~/Docker/<project>`.  This allows me to cleary identify which technology is associated with the projects and allows me to use various helper scripts to automate processes, etc.  So let's create project directory for a notional Atlas demo.
 
@@ -105,11 +107,11 @@ I like to create project directories.  My Vagrant work goes under `~/Vagrant/<pr
 mkdir -p ~/Docker/atlas-demo1 && cd ~/Docker/atlas-demo1
 ```
 
-## Create the project helper files
+### Create the project helper files
 
 To make it easy to switch between containers and projects, I like to create helper scripts.  In the Docker sandbox scenario, I have 4 helper scripts.  You can copy/paste the scripts as described below, or you can download the helper-scripts.zip file.  All of these scripts should be run from within the project directory.
 
-### create-container.sh
+#### create-container.sh
 
 The first script is used to create the container.  In this script we'll be using a similar `docker run` command as used in the previous tutorial.  However, we are going to modify the mounts so they are no longer shared.  The key change is we are doing grab the basename of our current project directory and use that name as our mount pount.  We are using the basename of our project directory for the `--name` of the container.  In this case, the basename is `atlas-demo1`.  The last change you should notice is we have added a second -v flag.  This addition mounts our local project directory to `/mount` within the container.  This makes it really easy to copy data back and forth between our local directory and the container.
 
@@ -188,7 +190,7 @@ sandbox /usr/sbin/sshd -D
 
 Now save your file with `:wq!`
 
-### start-container.sh
+#### start-container.sh
 
 The second script is used to start the container after it has been created.  You start a container by using the `docker start <container>` command where container is either the name or id.  Instead of having to remember what the container name is, we'll have the script figure that out for us.
 
@@ -206,7 +208,7 @@ docker start ${PROJ_DIR}
 
 Now save your file with `:wq!`
 
-### stop-container.sh
+#### stop-container.sh
 
 The third script is used to stop the container after it has been created.  You stop a container by using the `docker stop <container>` command where container is either the name or id.  Instead of having to remember what the container name is, we'll have the script figure that out for us.
 
@@ -224,7 +226,7 @@ docker stop ${PROJ_DIR}
 
 Now save your file with `:wq!`
 
-### ssh-container.sh
+#### ssh-container.sh
 
 The fourth script is used to ssh into the container.  The container maps the local host port 2222 to the container port 22 via the `-p 2222:22` line in the `create-container.sh` script.  Admittedly the ssh command to connect is simple.  However this script means I don't have to think about it very much.  Edit the ssh-container.sh file `vi ssh-container.sh`.
 
@@ -238,7 +240,7 @@ ssh -p 2222 root@localhost
 
 Now save your file with `:wq!`
 
-## Create the atlas-demo1 container
+### Create the atlas-demo1 container
 
 Now that we have our helper scripts ready to go, let's create the container for our notional Atlas demo.
 
@@ -266,7 +268,7 @@ You should notice the shortened version of the container id is listed as `9366e0
 
 When you create a container with `docker run` it starts it for you.  That means you can connect to it without having to run the `start-container.sh` script.  After the container has been stopped, you will need to run `start-container.sh` to bring it up, NOT `create-container.sh`.
 
-## Connect to the atlas-demo1 container
+### Connect to the atlas-demo1 container
 
 Now that the container is started, we can connect to it. We can use our new helper script `ssh-container.sh` to make it easy.  You should be prompted for a password.  The default password on the sandbox is `hadoop`.  The first time you start log into a new container you will be prompted to change the password.  You should see something similar to this:
 
@@ -292,7 +294,7 @@ Retype new password:
 passwd: all authentication tokens updated successfully.
 ```
 
-## Verify container mounts
+### Verify container mounts
 
 Let's verify our container mounts.  You do this with the `df` command:
 
@@ -325,7 +327,7 @@ drwxr-xr-x  3 root root     4096 Oct  7 22:57 ..
 
 You should see the 4 helper scripts we created.  If I want to easily make data available to the container, all I have to do is copy the data to my project directory.
 
-## Start the sandbox processes
+### Start the sandbox processes
 
 When the container starts up, it doesn't automatically start the sandbox processes.  You can do that by running the `/etc/inid./startup_script`.  You should see something similar to this:
 
@@ -370,7 +372,7 @@ Now the sandbox process are running and you can access the Ambari interface if `
 
 ![Ambari Image 1](assets/ambari-1.png)
 
-## Enable HBase
+### Enable HBase
 
 We are going to start the HBase service and turn off maintenance mode.  We want to compare this sandbox with another one we will start later to show the services are different.
 
@@ -394,7 +396,7 @@ Once HBase is running, you should see something similar to this:
 
 Notce that HBase is running and is no longer in maintenance mode.
 
-## Upload file to HDFS home directory
+### Upload file to HDFS home directory
 
 We are going to upload a file to the user home directory on HDFS.  As mentioned in the previous section, we want to compare this sandbox with anoterh to show the directories are different.
 
@@ -422,7 +424,7 @@ You should be in your project directory.  If you are not, nagivate it that locat
 
 ![FilesHBase Image 5](assets/files-5.png)
 
-## Stop the atlas-demo1 container
+### Stop the atlas-demo1 container
 
 Now we are going to stop our container.  Before stopping it, use Ambari to `Stop All` services.  You can find that link on the Ambari Dashboard:
 
@@ -440,7 +442,7 @@ atlas-demo1
 
 When you stop or start a container, Docker will always print the name of the container when it the command completes.
 
-## Create the atlas-demo2 container
+### Create the atlas-demo2 container
 
 Now let's create a new project directory for comparison.  This will show that our two containers are not sharing configurations.
 
@@ -448,7 +450,7 @@ Now let's create a new project directory for comparison.  This will show that ou
 $ mkdir ~/Docker/atlas-demo2 && cd ~/Docker/atlas-demo2
 ```
 
-## Copy helper scripts
+### Copy helper scripts
 
 There is no reason to copy/paste those helper scripts again.  The scripts we created will work anywhere.  So let's copy them.
 
@@ -458,7 +460,7 @@ $ ls
 create-container.sh ssh-container.sh start-container.sh stop-container.sh
 ```
 
-## Create the atlas-demo2 container
+### Create the atlas-demo2 container
 
 This is a new container, so we need to run the `create-container.sh` script.
 
@@ -479,7 +481,7 @@ CONTAINER ID        IMAGE               COMMAND               CREATED           
 
 You should notice the shortened version of the container id is listed as `05e4710f3aaa`.  As before, this id matches the first 12 charactrers,  and it matches the output of our create-container.sh command.  Your container id value will be different.  You should also notice the name of the container is listed as `atlas-demo2`.
 
-## Connect to the atlas-demo2 container
+### Connect to the atlas-demo2 container
 
 Now that the container is started, we can connect to it. We can use our new helper script `ssh-container.sh` to make it easy.  You should be prompted for a password.  The default password on the sandbox is `hadoop`.  The first time you log into a new container you will be prompted to change the password.  You should see something similar to this:
 
@@ -538,7 +540,7 @@ drwxr-xr-x  3 root root     4096 Oct  7 22:57 ..
 
 As before, you should see the 4 helper scripts we created.
 
-## Start the sandbox processes
+### Start the sandbox processes
 
 When the container starts up, it doesn't automatically start the sandbox processes.  You can do that by running the `/etc/inid./startup_script`.  You should see something similar to this:
 
@@ -579,7 +581,7 @@ Starting shellinaboxd:                                     [  OK  ]
 
 **NOTE: You can ignore any warnings or errors that are displayed.**
 
-## Check Ambari Services
+### Check Ambari Services
 
 We are going to look at the services in Ambari.  In the old container we turned off maintenance mode.  Login with the `raj_ops` username and password.
 
@@ -589,7 +591,7 @@ You should see something similar to this:
 
 You should notice that the HBase service has maintenance mode turn on.
 
-## Check HDFS home directory
+### Check HDFS home directory
 
 Now nagivate the `raj_ops` HDFS home directory using the Ambari Files View.  Follow the process above up to get to the home directory.  You should see something similar to this:
 
@@ -597,7 +599,7 @@ Now nagivate the `raj_ops` HDFS home directory using the Ambari Files View.  Fol
 
 Notice the file we uploaded in the other container is not here.
 
-## Stop the atlas-demo2 container
+### Stop the atlas-demo2 container
 
 Now we are going to stop our container.  Before stopping it, use Ambari to `Stop All` services as you did before.  Then you run the `stop-container.sh` script:
 
@@ -611,7 +613,7 @@ $ ./stop-container.sh
 atlas-demo2
 ```
 
-## Starting created containers
+### Starting created containers
 
 As mentioned above, the create process will autostart the containers.  After you stop them, you need to run the `start-conatiner.sh` script, which simply runs `docker start <container>`.
 
@@ -622,7 +624,7 @@ atlas-demo2
 
 Again, the Docker start command will print the name of the container when it completes.
 
-## Deleting containers
+### Deleting containers
 
 If you decide you no longer need a container, you can easily delete it.  Before you ca delete the container, you need to stop it first.  Once it is stopped, you us the `docker rm` command:
 
@@ -642,7 +644,7 @@ Error response from daemon: No such container: atlas-demo1
 
 That means the container is already stopped and can be deleted
 
-## Note on disk utilization
+### Note on disk utilization
 
 While the containers do not share configurations, they all run on the same Docker virtual machine.  This means that you should properly manage the number of containers you are using as the storage space of the VM will become an issue.
 
